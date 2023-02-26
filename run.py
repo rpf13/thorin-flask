@@ -1,11 +1,16 @@
 import os
+# the request module is needed to handle the form data
+# the flash module is used to display "flash" messages
 from flask import Flask, render_template, request, flash
 import json
+# we only want to import the env, if there is and env.py file available
 if os.path.exists("env.py"):
     import env
 
 
 app = Flask(__name__)
+# we assign the secret key, created in the env.py file,
+# to the app.secret_key var
 app.secret_key = os.environ.get("SECRET_KEY")
 
 
@@ -39,9 +44,12 @@ def about_member(member_name):
     return render_template("member.html", member=member)
 
 
+# We need to tell this view, that GET and POST methods will be alllowed
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
+        # the name variable will be retreived from the name attribute
+        # which we have set in the form elements on the contact.html
         flash("Thanks {}, we have received your message!".format(
             request.form.get("name")))
     return render_template("contact.html", page_title="Contact")
